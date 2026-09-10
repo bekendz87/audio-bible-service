@@ -1,0 +1,30 @@
+package com.audiobible.audio_bible_service.controller;
+
+import com.audiobible.audio_bible_service.dto.response.BookResponse;
+import com.audiobible.audio_bible_service.dto.response.ChapterResponse;
+import com.audiobible.audio_bible_service.service.BookService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/books")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
+public class BookController {
+
+    private final BookService bookService;
+
+    @GetMapping
+    public ResponseEntity<List<BookResponse>> getAllBooks(
+            @RequestParam(required = false) String testament) {
+        return ResponseEntity.ok(bookService.getAllBooks(testament));
+    }
+
+    @GetMapping("/{bookId}/chapters")
+    public ResponseEntity<List<ChapterResponse>> getChaptersByBook(@PathVariable String bookId) {
+        return ResponseEntity.ok(bookService.getChaptersByBookId(bookId));
+    }
+}
