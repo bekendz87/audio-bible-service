@@ -1,22 +1,63 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
+  tomcat:
+    threads:
+      max: ${TOMCAT_MAX_THREADS:50}
+      min-spare: ${TOMCAT_MIN_SPARE_THREADS:5}
+    max-connections: ${TOMCAT_MAX_CONNECTIONS:200}
+    accept-count: ${TOMCAT_ACCEPT_COUNT:50}
+    connection-timeout: ${TOMCAT_CONNECTION_TIMEOUT:20s}
 
 spring:
   application:
     name: audio-bible-service
+  main:
+    banner-mode: off
+  cache:
+    type: ${CACHE_TYPE:simple}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      connect-timeout: ${REDIS_CONNECT_TIMEOUT:2s}
+      timeout: ${REDIS_TIMEOUT:2s}
+  task:
+    execution:
+      pool:
+        core-size: ${TASK_CORE_SIZE:1}
+        max-size: ${TASK_MAX_SIZE:2}
+        queue-capacity: ${TASK_QUEUE_CAPACITY:1000}
+      thread-name-prefix: audio-task-
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:50MB}
+      max-request-size: ${MAX_REQUEST_SIZE:50MB}
 
   datasource:
-    url: jdbc:mysql://localhost:3306/audio_bible_db
-    username: root
+    url: ${DB_URL:jdbc:mysql://localhost:3306/audio_bible_db?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=250&prepStmtCacheSqlLimit=2048}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:10}
+      minimum-idle: ${DB_POOL_MIN_IDLE:2}
+      connection-timeout: ${DB_CONNECTION_TIMEOUT:30000}
+      idle-timeout: ${DB_IDLE_TIMEOUT:300000}
+      max-lifetime: ${DB_MAX_LIFETIME:1200000}
+      leak-detection-threshold: ${DB_LEAK_DETECTION:0}
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
 
 jwt:
   secret: c7e873a1ef5d45d3bc310b991ad3ba8a6b359f485121bf95368a520f92502c9d
@@ -28,3 +69,13 @@ file:
     secret-key: wYyYednuqbxmdAtQC36jHbkcIsBSq3dGpqHIS+2eq/4=
 cors:
   allowed-origins: "*"
+
+logging:
+  file:
+    name: logs/application.log
+  level:
+    root: ${LOG_LEVEL:ERROR}
+    REQUEST: INFO
+    CLIENT_RESPONSE: INFO
+    INTERNAL: INFO
+

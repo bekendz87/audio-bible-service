@@ -7,10 +7,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.audiobible.audio_bible_service.config.AdminApiController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@AdminApiController
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class AdminContentController {
     private final AdminContentService service;

@@ -67,6 +67,10 @@ public class UserService {
                 .role(u.getRole()).active(u.getActive()).createdAt(u.getCreatedAt()).build();
     }
 
+    public boolean isUserEmail(String userId, String email) {
+        return userRepository.findById(userId).map(user -> user.getEmail().equalsIgnoreCase(email)).orElse(false);
+    }
+
     public void updateProgress(String userId, ProgressUpdateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));

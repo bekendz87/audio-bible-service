@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, String> {
-    List<Book> findByTestament(String testament);
+    List<Book> findByTestamentIgnoreCase(String testament);
 
     Page<Book> findByTestamentIgnoreCase(String testament, Pageable pageable);
 }

@@ -34,6 +34,9 @@ public class RefreshTokenService {
         if (token.isRevoked() || token.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Refresh token đã hết hạn hoặc bị thu hồi");
         }
+        if (!Boolean.TRUE.equals(token.getUser().getActive())) {
+            throw new IllegalArgumentException("Tài khoản đã bị khóa");
+        }
         return token.getUser();
     }
 

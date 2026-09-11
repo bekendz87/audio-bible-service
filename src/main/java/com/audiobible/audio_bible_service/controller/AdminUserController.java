@@ -10,9 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.audiobible.audio_bible_service.config.AdminApiController;
 
 @RestController
-@RequestMapping("/api/v1/admin/users")
+@AdminApiController
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class AdminUserController {
     private final UserService userService;

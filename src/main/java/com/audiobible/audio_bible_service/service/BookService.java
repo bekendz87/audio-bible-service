@@ -23,8 +23,8 @@ public class BookService {
 
     @Cacheable(value = "books", key = "#testament != null ? #testament : 'ALL'")
     public List<BookResponse> getAllBooks(String testament) {
-        List<Book> books = (testament != null && !testament.isEmpty())
-                ? bookRepository.findByTestament(testament)
+        List<Book> books = (testament != null && !testament.isBlank())
+            ? bookRepository.findByTestamentIgnoreCase(testament)
                 : bookRepository.findAll();
 
         return books.stream().map(this::mapToBookResponse).toList();

@@ -46,7 +46,7 @@ public class FileStorageService {
 
             String encryptedPath = fileSecurityUtil.encrypt(internalPath);
 
-            return "storage/" + encryptedPath;
+            return "/api/v1/storage/" + encryptedPath;
 
         } catch (IOException ex) {
             throw new RuntimeException("Lưu file thất bại!", ex);
