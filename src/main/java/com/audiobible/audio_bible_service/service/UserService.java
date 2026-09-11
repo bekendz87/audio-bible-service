@@ -11,10 +11,11 @@ import com.audiobible.audio_bible_service.repository.UserProgressRepository;
 import com.audiobible.audio_bible_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import com.audiobible.audio_bible_service.dto.response.UserResponse;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ChapterRepository chapterRepository;
     private final UserProgressRepository userProgressRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public User register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -31,7 +33,7 @@ public class UserService {
 
         User user = User.builder()
                 .email(request.getEmail())
-                .password(hashPassword(request.getPassword()))
+                .password(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName())
                 .role(Role.USER)
                 .build();
@@ -39,18 +41,30 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    private String hashPassword(String password) {
-        try {
-            byte[] hash = MessageDigest.getInstance("SHA-256")
-                    .digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder encoded = new StringBuilder(hash.length * 2);
-            for (byte value : hash) {
-                encoded.append(String.format("%02x", value));
-            }
-            return encoded.toString();
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("Không thể mã hóa mật khẩu", exception);
-        }
+    public Page<UserResponse> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(this::toResponse);
+    }
+
+    public UserResponse updateRole(String id, Role role) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        user.setRole(role);
+        return toResponse(userRepository.save(user));
+    }
+
+    public UserResponse setActive(String id, boolean active) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        user.setActive(active);
+        return toResponse(userRepository.save(user));
+    }
+
+    public void deleteUser(String id) {
+        if (!userRepository.existsById(id)) throw new RuntimeException("User không tồn tại");
+        userRepository.deleteById(id);
+    }
+
+    private UserResponse toResponse(User u) {
+        return UserResponse.builder().id(u.getId()).email(u.getEmail()).fullName(u.getFullName())
+                .role(u.getRole()).active(u.getActive()).createdAt(u.getCreatedAt()).build();
     }
 
     public void updateProgress(String userId, ProgressUpdateRequest request) {

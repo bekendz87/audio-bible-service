@@ -21,6 +21,10 @@ spring:
 jwt:
   secret: c7e873a1ef5d45d3bc310b991ad3ba8a6b359f485121bf95368a520f92502c9d
   expiration: 86400000
-
+  refresh-expiration: 2592000000
+file:
+  upload-dir: uploads
+  security:
+    secret-key: wYyYednuqbxmdAtQC36jHbkcIsBSq3dGpqHIS+2eq/4=
 cors:
   allowed-origins: "*"

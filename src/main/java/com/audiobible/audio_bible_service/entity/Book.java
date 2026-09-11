@@ -27,6 +27,10 @@ public class Book {
     @Column(columnDefinition = "TEXT")
     private String artworkUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 

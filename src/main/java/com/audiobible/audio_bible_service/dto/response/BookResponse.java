@@ -12,4 +12,6 @@ public class BookResponse {
     private String artworkUrl;
     private String testament;
     private Integer totalChapters;
+    private String categoryId;
+    private String categoryName;
 }

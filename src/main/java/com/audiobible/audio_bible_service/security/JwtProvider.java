@@ -27,10 +27,20 @@ public class JwtProvider {
         return Jwts.builder()
                 .subject(email)
                 .claim("role", role)
+                .claim("type", "access")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    public boolean isAccessToken(String token) {
+        try {
+            return "access".equals(Jwts.parser().verifyWith(getSigningKey()).build()
+                    .parseSignedClaims(token).getPayload().get("type", String.class));
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     public String getEmailFromToken(String token) {

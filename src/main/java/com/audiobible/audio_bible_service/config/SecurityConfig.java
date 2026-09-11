@@ -40,14 +40,21 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/books/**").permitAll()
+                        .requestMatchers("/api/v1/categories/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/storage/**").permitAll()
                         .requestMatchers("/api/v1/users/progress/**").hasAnyRole("USER", "CONTENT_CREATOR", "ADMIN")
+                        .requestMatchers("/api/v1/admin/categories/**", "/api/v1/admin/chapters/**")
+                        .hasAnyRole("CONTENT_CREATOR", "ADMIN")
+                        .requestMatchers("/api/v1/admin/upload/**")
+                        .hasAnyRole("CONTENT_CREATOR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/admin/books/**")
                         .hasAnyRole("CONTENT_CREATOR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/admin/books/**")
                         .hasAnyRole("CONTENT_CREATOR", "ADMIN")
                         .requestMatchers("/api/v1/admin/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/books/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/users/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
