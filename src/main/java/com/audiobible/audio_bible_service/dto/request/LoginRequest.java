@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.audiobible.audio_bible_service.entity.Role;
 
 @Data
 @NoArgsConstructor
@@ -17,4 +18,6 @@ public class LoginRequest {
 
     @NotBlank(message = "Mật khẩu không được để trống")
     private String password;
+
+    private Role role;
 }

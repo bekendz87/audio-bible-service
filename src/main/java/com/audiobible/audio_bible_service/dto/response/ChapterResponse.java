@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ChapterResponse {
-    private String id;
-    private String bookId;
+    private Integer id;
+    private Integer bookId;
     private String bookName;
     private Integer chapterNum;
     private String reader;

@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.audiobible.audio_bible_service.dto.response.UserResponse;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -45,20 +44,21 @@ public class UserService {
         return userRepository.findAll(pageable).map(this::toResponse);
     }
 
-    public UserResponse updateRole(String id, Role role) {
+    public UserResponse updateRole(int id, Role role) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User không tồn tại"));
         user.setRole(role);
         return toResponse(userRepository.save(user));
     }
 
-    public UserResponse setActive(String id, boolean active) {
+    public UserResponse setActive(int id, boolean active) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User không tồn tại"));
         user.setActive(active);
         return toResponse(userRepository.save(user));
     }
 
-    public void deleteUser(String id) {
-        if (!userRepository.existsById(id)) throw new RuntimeException("User không tồn tại");
+    public void deleteUser(int id) {
+        if (!userRepository.existsById(id))
+            throw new RuntimeException("User không tồn tại");
         userRepository.deleteById(id);
     }
 
@@ -67,11 +67,11 @@ public class UserService {
                 .role(u.getRole()).active(u.getActive()).createdAt(u.getCreatedAt()).build();
     }
 
-    public boolean isUserEmail(String userId, String email) {
+    public boolean isUserEmail(int userId, String email) {
         return userRepository.findById(userId).map(user -> user.getEmail().equalsIgnoreCase(email)).orElse(false);
     }
 
-    public void updateProgress(String userId, ProgressUpdateRequest request) {
+    public void updateProgress(int userId, ProgressUpdateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
 

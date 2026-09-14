@@ -6,7 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ApplicationLogRepository extends JpaRepository<ApplicationLog, String> {
+public interface ApplicationLogRepository extends JpaRepository<ApplicationLog, Integer> {
     Page<ApplicationLog> findByLogType(LogType logType, Pageable pageable);
+
     Page<ApplicationLog> findByRequestId(String requestId, Pageable pageable);
 }

@@ -26,7 +26,7 @@ public class LogManagementService {
     private final Path logDirectory;
     private final ApplicationLogRepository applicationLogRepository;
 
-    public LogManagementService(@Value("${logging.file.name:logs/application.log}") String logPath,
+    public LogManagementService(@Value("${logging.file.name}") String logPath,
             ApplicationLogRepository applicationLogRepository) {
         Path configuredPath = Path.of(logPath).toAbsolutePath().normalize();
         this.logDirectory = configuredPath.getParent();

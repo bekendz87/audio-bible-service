@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 @Builder
 public class BookResponse {
-    private String id;
+    private Integer id;
     private String title;
     private String subtitle;
     private String artworkUrl;
     private String testament;
     private Integer totalChapters;
-    private String categoryId;
+    private Integer categoryId;
     private String categoryName;
 }

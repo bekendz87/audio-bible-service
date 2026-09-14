@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 public class ChapterRequest {
-    private String id;
-    @NotBlank(message = "Book id không được để trống")
-    private String bookId;
+    private Integer id;
+    @NotBlank(message = "Mã sách không được để trống")
+    private Integer bookId;
     @NotNull(message = "Số chương không được để trống")
     private Integer chapterNum;
     private String reader;

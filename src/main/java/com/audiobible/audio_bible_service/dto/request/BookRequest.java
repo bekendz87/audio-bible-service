@@ -13,5 +13,5 @@ public class BookRequest {
     private Integer totalChapters;
     private String subtitle;
     private String artworkUrl;
-    private String categoryId;
+    private int categoryId;
 }

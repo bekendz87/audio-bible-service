@@ -17,7 +17,7 @@ import java.util.HexFormat;
 @RequiredArgsConstructor
 public class RefreshTokenService {
     private final RefreshTokenRepository repository;
-    @Value("${jwt.refresh-expiration:2592000000}")
+    @Value("${jwt.refresh-expiration}")
     private long expiration;
     private final SecureRandom random = new SecureRandom();
 

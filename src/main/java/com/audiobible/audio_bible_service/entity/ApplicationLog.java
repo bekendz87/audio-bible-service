@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ApplicationLog {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
@@ -68,7 +68,9 @@ public class ApplicationLog {
 
     @PrePersist
     protected void onCreate() {
-        if (createdAt == null)
+        if (createdAt == null) {
             createdAt = LocalDateTime.now();
+        }
+
     }
 }

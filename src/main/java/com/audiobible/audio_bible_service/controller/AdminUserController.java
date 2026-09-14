@@ -27,17 +27,17 @@ public class AdminUserController {
     }
 
     @PatchMapping("/{id}/role")
-    public UserResponse updateRole(@PathVariable String id, @Valid @RequestBody UserRoleUpdateRequest request) {
+    public UserResponse updateRole(@PathVariable int id, @Valid @RequestBody UserRoleUpdateRequest request) {
         return userService.updateRole(id, request.getRole());
     }
 
     @PatchMapping("/{id}/active")
-    public UserResponse updateActive(@PathVariable String id, @RequestParam boolean active) {
+    public UserResponse updateActive(@PathVariable int id, @RequestParam boolean active) {
         return userService.setActive(id, active);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

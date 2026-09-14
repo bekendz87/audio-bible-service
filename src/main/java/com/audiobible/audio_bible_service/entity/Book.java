@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Book {
 
     @Id
-    private String id;
+    private int id;
     @Column(nullable = false)
     private String title;
 

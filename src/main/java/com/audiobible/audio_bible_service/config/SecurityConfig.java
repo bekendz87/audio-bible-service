@@ -1,5 +1,6 @@
 package com.audiobible.audio_bible_service.config;
 
+import com.audiobible.audio_bible_service.security.JwtAuthenticationEntryPoint;
 import com.audiobible.audio_bible_service.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,27 +39,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/books/**").permitAll()
-                        .requestMatchers("/api/v1/categories/**").permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/storage/**").permitAll()
+                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/refresh")
+                        .permitAll()
+                        .requestMatchers("/api/v1/auth/**").authenticated()
+                        .requestMatchers("/api/v1/books/**", "/api/v1/categories/**", "/api/v1/storage/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/*/progress")
                         .hasAnyRole("USER", "CONTENT_CREATOR", "ADMIN")
-                        .requestMatchers("/api/v1/admin/categories/**", "/api/v1/admin/chapters/**")
-                        .hasAnyRole("CONTENT_CREATOR", "ADMIN")
-                        .requestMatchers("/api/v1/admin/upload/**")
+                        .requestMatchers("/api/v1/admin/categories/**", "/api/v1/admin/chapters/**",
+                                "/api/v1/admin/upload/**")
                         .hasAnyRole("CONTENT_CREATOR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/admin/books/**")
                         .hasAnyRole("CONTENT_CREATOR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/admin/books/**")
                         .hasAnyRole("CONTENT_CREATOR", "ADMIN")
-                        .requestMatchers("/api/v1/admin/users/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/admin/logs/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/users/**", "/api/v1/admin/logs/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/books/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/admin/users/**").hasRole("ADMIN")
-
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

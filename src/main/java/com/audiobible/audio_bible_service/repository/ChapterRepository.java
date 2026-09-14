@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Repository
-public interface ChapterRepository extends JpaRepository<Chapter, String> {
-    List<Chapter> findByBookIdOrderByChapterNumAsc(String bookId);
+public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
+    List<Chapter> findByBookIdOrderByChapterNumAsc(int bookId);
 
-    Page<Chapter> findByBookId(String bookId, Pageable pageable);
+    Page<Chapter> findByBookId(int bookId, Pageable pageable);
 }

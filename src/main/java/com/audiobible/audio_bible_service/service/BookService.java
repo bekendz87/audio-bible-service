@@ -39,12 +39,12 @@ public class BookService {
         return books.map(this::mapToBookResponse);
         }
     @Cacheable(value = "chapters", key = "#bookId")
-    public List<ChapterResponse> getChaptersByBookId(String bookId) {
+    public List<ChapterResponse> getChaptersByBookId(int bookId) {
         List<Chapter> chapters = chapterRepository.findByBookIdOrderByChapterNumAsc(bookId);
         return chapters.stream().map(this::mapToChapterResponse).toList();
     }
 
-    public Page<ChapterResponse> getChapters(String bookId, int page, int size) {
+    public Page<ChapterResponse> getChapters(int bookId, int page, int size) {
         PageRequest pageable = PageRequest.of(Math.max(page, 0), Math.min(Math.max(size, 1), 100),
                 Sort.by("chapterNum").ascending());
         return chapterRepository.findByBookId(bookId, pageable).map(this::mapToChapterResponse);

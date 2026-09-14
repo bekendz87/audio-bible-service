@@ -33,13 +33,13 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}/chapters")
-    public ResponseEntity<List<ChapterResponse>> getChaptersByBook(@PathVariable String bookId) {
+    public ResponseEntity<List<ChapterResponse>> getChaptersByBook(@PathVariable int bookId) {
         return ResponseEntity.ok(bookService.getChaptersByBookId(bookId));
     }
 
     @GetMapping("/{bookId}/chapters/page")
     public ResponseEntity<Page<ChapterResponse>> getChaptersByBookPage(
-            @PathVariable String bookId,
+            @PathVariable int bookId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.ok(bookService.getChapters(bookId, page, size));

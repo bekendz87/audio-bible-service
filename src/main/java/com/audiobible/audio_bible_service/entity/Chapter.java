@@ -13,7 +13,8 @@ import lombok.*;
 public class Chapter {
 
     @Id
-    private String id; 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)

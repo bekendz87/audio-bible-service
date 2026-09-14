@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserProgressRepository extends JpaRepository<UserProgress, Long> {
-    Optional<UserProgress> findByUserIdAndChapterId(String userId, String chapterId);
+public interface UserProgressRepository extends JpaRepository<UserProgress, Integer> {
+    Optional<UserProgress> findByUserIdAndChapterId(int userId, int chapterId);
 }

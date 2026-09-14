@@ -5,6 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .subject(email)
                 .claim("role", role)
+                .claim("email", email)
                 .claim("type", "access")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
@@ -35,26 +37,47 @@ public class JwtProvider {
     }
 
     public boolean isAccessToken(String token) {
+        if (!StringUtils.hasText(token)) {
+            return false;
+        }
         try {
-            return "access".equals(Jwts.parser().verifyWith(getSigningKey()).build()
-                    .parseSignedClaims(token).getPayload().get("type", String.class));
+            return "access".equals(Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("type", String.class));
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
     public String getEmailFromToken(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+
+        if (!StringUtils.hasText(token)) {
+            throw new RuntimeException("Token không được để trống hoặc không hợp lệ");
+        }
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new RuntimeException("Token đã hết hạn hoặc không đúng định dạng");
+        }
     }
 
     public boolean validateToken(String token) {
+        if (!StringUtils.hasText(token)) {
+            return false;
+        }
         try {
-            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
+            Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;

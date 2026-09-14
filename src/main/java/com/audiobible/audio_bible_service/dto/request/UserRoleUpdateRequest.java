@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 public class UserRoleUpdateRequest {
-    @NotNull(message = "Role không được để trống")
+    @NotNull(message = "Vai trò không được để trống")
     private Role role;
 }

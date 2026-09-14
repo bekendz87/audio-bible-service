@@ -9,6 +9,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheEvict;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,9 +19,10 @@ public class AdminContentService {
     private final CategoryRepository categories;
 
     @CacheEvict(value = "books", allEntries = true)
-    public CategoryResponse saveCategory(CategoryRequest r, String id) {
-        Category c = id == null ? new Category()
+    public CategoryResponse saveCategory(CategoryRequest r, int id) {
+        Category c = id != 0 ? new Category()
                 : categories.findById(id).orElseThrow(() -> new RuntimeException("Danh mục không tồn tại"));
+
         c.setName(r.getName());
         c.setDescription(r.getDescription());
         return map(categories.save(c));
@@ -31,39 +33,34 @@ public class AdminContentService {
     }
 
     @CacheEvict(value = "books", allEntries = true)
-    public void deleteCategory(String id) {
+    public void deleteCategory(int id) {
         categories.deleteById(id);
     }
 
     @CacheEvict(value = "books", allEntries = true)
-    public BookResponse saveBook(BookRequest r, String id) {
-        Book b = id == null ? new Book()
+    public BookResponse saveBook(BookRequest r, int id) {
+        Book b = id != 0 ? new Book()
                 : books.findById(id).orElseThrow(() -> new RuntimeException("Sách không tồn tại"));
-        if (id == null)
-            b.setId(r.getId() == null || r.getId().isBlank() ? java.util.UUID.randomUUID().toString() : r.getId());
+
         b.setTitle(r.getTitle());
         b.setTestament(r.getTestament());
         b.setTotalChapters(r.getTotalChapters());
         b.setSubtitle(r.getSubtitle());
         b.setArtworkUrl(r.getArtworkUrl());
-        b.setCategory(r.getCategoryId() == null ? null
-                : categories.findById(r.getCategoryId())
-                        .orElseThrow(() -> new RuntimeException("Danh mục không tồn tại")));
+        b.setCategory(r.getCategoryId() != 0 ? categories.findById(r.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Danh mục không tồn tại")) : null);
         return map(books.save(b));
     }
 
-    @CacheEvict(value = {"books", "chapters"}, allEntries = true)
-    public void deleteBook(String id) {
+    @CacheEvict(value = { "books", "chapters" }, allEntries = true)
+    public void deleteBook(int id) {
         books.deleteById(id);
     }
 
     @CacheEvict(value = "chapters", allEntries = true)
-    public ChapterResponse saveChapter(ChapterRequest r, String id) {
-        Chapter c = id == null ? new Chapter()
+    public ChapterResponse saveChapter(ChapterRequest r, int id) {
+        Chapter c = id != 0 ? new Chapter()
                 : chapters.findById(id).orElseThrow(() -> new RuntimeException("Chương không tồn tại"));
-        if (id == null) {
-            c.setId(r.getId() == null || r.getId().isBlank() ? java.util.UUID.randomUUID().toString() : r.getId());
-        }
 
         c.setBook(books.findById(r.getBookId()).orElseThrow(() -> new RuntimeException("Sách không tồn tại")));
         c.setChapterNum(r.getChapterNum());
@@ -77,7 +74,7 @@ public class AdminContentService {
     }
 
     @CacheEvict(value = "chapters", allEntries = true)
-    public void deleteChapter(String id) {
+    public void deleteChapter(int id) {
         chapters.deleteById(id);
     }
 

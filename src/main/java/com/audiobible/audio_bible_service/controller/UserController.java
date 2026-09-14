@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.audiobible.audio_bible_service.dto.response.ApiResponse;
 
 @RestController
 @RequestMapping("/users")
@@ -25,14 +26,14 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/progress")
-    public ResponseEntity<String> updateProgress(
-            @PathVariable String userId,
+    public ResponseEntity<Object> updateProgress(
+            @PathVariable int userId,
             @AuthenticationPrincipal UserDetails currentUser,
             @Valid @RequestBody ProgressUpdateRequest request) {
         if (currentUser == null || !userService.isUserEmail(userId, currentUser.getUsername())) {
             return ResponseEntity.status(403).body("Không có quyền cập nhật tiến trình của tài khoản này");
         }
         userService.updateProgress(userId, request);
-        return ResponseEntity.ok("Cập nhật tiến trình thành công");
+        return ResponseEntity.ok(ApiResponse.success(200, "Cập nhật tiến trình thành công"));
     }
 }

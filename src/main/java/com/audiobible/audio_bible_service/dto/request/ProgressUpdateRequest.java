@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class ProgressUpdateRequest {
     @NotNull
-    private String chapterId;
+    private int chapterId;
 
     @NotNull
     private Integer lastPositionSeconds;
