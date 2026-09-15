@@ -57,8 +57,10 @@ public class UserService {
     }
 
     public void deleteUser(int id) {
-        if (!userRepository.existsById(id))
+        if (!userRepository.existsById(id)) {
             throw new RuntimeException("User không tồn tại");
+        }
+
         userRepository.deleteById(id);
     }
 
@@ -89,5 +91,31 @@ public class UserService {
         progress.setIsCompleted(request.getIsCompleted() != null ? request.getIsCompleted() : false);
 
         userProgressRepository.save(progress);
+    }
+
+    public User findByEmail(String email) {
+        if (!userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email không tồn tại");
+        }
+
+        return userRepository.findByOneEmail(email);
+    }
+
+    public User findByID(int id) {
+        if (id == 0) {
+            return null;
+        }
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User updateUser(int id, User updatedUser) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User không tồn tại"));
+
+        user.setFullName(updatedUser.getFullName());
+        user.setAvatarUrl(updatedUser.getAvatarUrl());
+        user.setPassword(updatedUser.getPassword());
+        user.setRole(updatedUser.getRole());
+
+        return userRepository.save(user);
     }
 }

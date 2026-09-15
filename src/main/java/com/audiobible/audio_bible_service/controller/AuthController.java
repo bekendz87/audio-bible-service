@@ -10,6 +10,8 @@ import com.audiobible.audio_bible_service.repository.UserRepository;
 import com.audiobible.audio_bible_service.security.JwtProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -92,9 +94,27 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
-        refreshTokenService.revoke(request.getRefreshToken());
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<Void>> logout(@Valid @RequestBody RefreshTokenRequest request) {
+        try {
+            if (!StringUtils.hasText(request.getRefreshToken())) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(ApiResponse.error(400, "Refresh token không được để trống"));
+            }
+
+            refreshTokenService.revoke(request.getRefreshToken());
+
+            SecurityContextHolder.clearContext();
+
+            return ResponseEntity
+                    .ok(ApiResponse.success(200, "Đăng xuất thành công"));
+
+        } catch (Exception e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error(401, "Đăng xuất thất bại: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/role")
