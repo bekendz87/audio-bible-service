@@ -14,11 +14,12 @@ import java.time.LocalDateTime;
 public class Book {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
     private String testament;
 
     private Integer totalChapters;
@@ -27,9 +28,12 @@ public class Book {
     @Column(columnDefinition = "TEXT")
     private String artworkUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(name = "is_remove")
+    private Boolean isRemove;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;

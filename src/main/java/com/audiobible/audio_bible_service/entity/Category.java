@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "categories")
 @Getter
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +26,9 @@ public class Category {
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "is_remove")
+    private Boolean isRemove;
 
     @PrePersist
     protected void onCreate() {

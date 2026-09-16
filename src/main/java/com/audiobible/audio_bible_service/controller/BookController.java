@@ -44,4 +44,11 @@ public class BookController {
             @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.ok(bookService.getChapters(bookId, page, size));
     }
+
+    @GetMapping("/chapters/page")
+    public ResponseEntity<Page<ChapterResponse>> getChaptersByPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(bookService.getChaptersPage(page, size));
+    }
 }

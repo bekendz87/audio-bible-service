@@ -8,7 +8,6 @@ public class BookRequest {
     private String id;
     @NotBlank(message = "Tên sách không được để trống")
     private String title;
-    @NotBlank(message = "Kinh điển không được để trống")
     private String testament;
     private Integer totalChapters;
     private String subtitle;

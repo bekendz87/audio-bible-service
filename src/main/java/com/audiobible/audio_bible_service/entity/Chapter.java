@@ -14,19 +14,24 @@ public class Chapter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; 
+    private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @Column(nullable = false)
-    private Integer chapterNum;
+    // @Column(nullable = false)
+    // private Integer chapterNum;
 
-    private String reader; 
+    private String reader;
+
+    private String title;
+    
+    @Column(name = "is_remove")
+    private Boolean isRemove;
 
     @Column(columnDefinition = "TEXT")
     private String audioUrl;
 
-    private String duration; 
+    private String duration;
 }

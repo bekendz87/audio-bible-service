@@ -6,12 +6,10 @@ import lombok.Data;
 
 @Data
 public class ChapterRequest {
-    private Integer id;
-    @NotBlank(message = "Mã sách không được để trống")
-    private Integer bookId;
-    @NotNull(message = "Số chương không được để trống")
-    private Integer chapterNum;
+    private int id;
+    private int bookId;
     private String reader;
+     private String title;
     private String audioUrl;
     private String duration;
 }

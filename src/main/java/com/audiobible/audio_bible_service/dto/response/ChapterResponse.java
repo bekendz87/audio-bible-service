@@ -9,8 +9,9 @@ public class ChapterResponse {
     private Integer id;
     private Integer bookId;
     private String bookName;
-    private Integer chapterNum;
     private String reader;
+    private String title;
+    private Boolean remove;
     private String audioUrl;
     private String duration;
 }

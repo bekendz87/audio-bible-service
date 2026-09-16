@@ -1,5 +1,7 @@
 package com.audiobible.audio_bible_service.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,4 +16,5 @@ public class BookResponse {
     private Integer totalChapters;
     private Integer categoryId;
     private String categoryName;
+    private LocalDateTime createdAt;
 }

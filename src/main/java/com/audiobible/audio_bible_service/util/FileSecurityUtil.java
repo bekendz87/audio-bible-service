@@ -16,11 +16,15 @@ public class FileSecurityUtil {
     @Value("${file.security.secret-key}")
     private String secretKey;
 
+    private SecretKeySpec getSecretKeySpec() {
+        byte[] keyBytes = Base64.getDecoder().decode(secretKey.trim());
+        return new SecretKeySpec(keyBytes, ALGORITHM);
+    }
+
     public String encrypt(String plainText) {
         try {
-            SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
+            cipher.init(Cipher.ENCRYPT_MODE, getSecretKeySpec());
             byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
             return Base64.getUrlEncoder().withoutPadding().encodeToString(encryptedBytes);
         } catch (Exception e) {
@@ -30,9 +34,8 @@ public class FileSecurityUtil {
 
     public String decrypt(String cipherText) {
         try {
-            SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, key);
+            cipher.init(Cipher.DECRYPT_MODE, getSecretKeySpec());
             byte[] decodedBytes = Base64.getUrlDecoder().decode(cipherText);
             return new String(cipher.doFinal(decodedBytes), StandardCharsets.UTF_8);
         } catch (Exception e) {
