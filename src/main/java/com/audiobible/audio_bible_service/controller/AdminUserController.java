@@ -1,7 +1,10 @@
 package com.audiobible.audio_bible_service.controller;
 
 import com.audiobible.audio_bible_service.dto.request.UserRoleUpdateRequest;
+import com.audiobible.audio_bible_service.dto.response.PermissionDetailWithUsersResponse;
+import com.audiobible.audio_bible_service.dto.response.UserPermissionsOverviewResponse;
 import com.audiobible.audio_bible_service.dto.response.UserResponse;
+import com.audiobible.audio_bible_service.service.PermissionService;
 import com.audiobible.audio_bible_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.audiobible.audio_bible_service.config.AdminApiController;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @AdminApiController
@@ -18,6 +23,25 @@ import com.audiobible.audio_bible_service.config.AdminApiController;
 @RequiredArgsConstructor
 public class AdminUserController {
     private final UserService userService;
+    private final PermissionService permissionService;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserPermissionsOverviewResponse> getUserPermissionsGroupedByModule(
+            @PathVariable int userId) {
+        return ResponseEntity.ok(permissionService.getUserPermissionsGroupedByModule(userId));
+    }
+
+    @GetMapping("/modules")
+    public ResponseEntity<Map<String, List<String>>> getAllModulePermissions() {
+        return ResponseEntity.ok(permissionService.getAllPermissionsGroupedByModule());
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<PermissionDetailWithUsersResponse> getPermissionDetail(
+            @RequestParam String module,
+            @RequestParam String code) {
+        return ResponseEntity.ok(permissionService.getPermissionDetailWithUsers(module, code));
+    }
 
     @GetMapping
     public Page<UserResponse> getUsers(@RequestParam(defaultValue = "0") int page,

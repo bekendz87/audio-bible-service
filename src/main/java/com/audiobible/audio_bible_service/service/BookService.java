@@ -84,6 +84,25 @@ public class BookService {
                 .map(this::mapToChapterResponse);
     }
 
+    @Transactional(readOnly = true)
+    public Page<ChapterResponse> getChaptersHaveAudio(int page, int size) {
+        PageRequest pageable = PageRequest.of(
+                Math.max(page, 0),
+                Math.min(Math.max(size, 1), 100),
+                Sort.by("id").ascending());
+
+        List<Chapter> firstChapters = chapterRepository.findFirstWithAudio(PageRequest.of(0, 1));
+
+        if (firstChapters.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        Integer bookId = firstChapters.get(0).getBook().getId();
+
+        return chapterRepository.findByBookIdWithAudio(bookId, pageable)
+                .map(this::mapToChapterResponse);
+    }
+
     private BookResponse mapToBookResponse(Book book) {
         return BookResponse.builder()
                 .id(book.getId())

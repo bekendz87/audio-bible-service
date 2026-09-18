@@ -51,4 +51,11 @@ public class BookController {
             @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.ok(bookService.getChaptersPage(page, size));
     }
+
+    @GetMapping("/chapters/have-audio")
+    public ResponseEntity<Page<ChapterResponse>> getChaptersHaveAudio(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(bookService.getChaptersHaveAudio(page, size));
+    }
 }
